@@ -1,4 +1,4 @@
-package se.java.security.models;
+package security_package.models;
 
 public enum Role {
     USER,

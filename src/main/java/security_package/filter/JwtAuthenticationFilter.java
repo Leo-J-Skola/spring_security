@@ -1,4 +1,4 @@
-package se.java.security.filter;
+package security_package.filter;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import se.java.security.services.CustomUserDetailsService;
-import se.java.security.util.JwtUtil;
+import security_package.services.CustomUserDetailsService;
+import security_package.util.JwtUtil;
 
 import java.io.IOException;
 

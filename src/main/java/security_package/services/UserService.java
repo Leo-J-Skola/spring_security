@@ -1,11 +1,11 @@
-package se.java.security.services;
+package security_package.services;
 
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import se.java.security.models.Role;
-import se.java.security.models.User;
-import se.java.security.repository.UserRepository;
+import security_package.models.Role;
+import security_package.models.User;
+import security_package.repository.UserRepository;
 
 import java.util.Set;
 
@@ -28,12 +28,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User findUserByUsername(String username) {
-        return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    // find user by username
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public Boolean userExists(String username) {
+    // check if username already exists
+    public boolean existsByUsername(String username) {
         return userRepository.findByUsername(username).isPresent();
     }
-}
 
+}

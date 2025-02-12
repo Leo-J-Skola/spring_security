@@ -1,7 +1,7 @@
-package se.java.security.repository;
+package security_package.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import se.java.security.models.User;
+import security_package.models.User;
 
 import java.util.Optional;
 

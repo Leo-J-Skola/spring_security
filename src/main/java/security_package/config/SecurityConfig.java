@@ -1,4 +1,4 @@
-package se.java.security.config;
+package security_package.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +14,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import se.java.security.filter.JwtAuthenticationFilter;
+import security_package.filter.JwtAuthenticationFilter;
 
-import java.security.Security;
 import java.util.List;
 
 @Configuration
@@ -45,6 +44,7 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             //define URL based rules
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/products/**").hasRole("ADMIN")
                     .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                     .anyRequest().permitAll()
                     //any other requests, the user needs to be logged in

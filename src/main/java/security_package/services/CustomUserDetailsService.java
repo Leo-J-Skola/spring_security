@@ -1,4 +1,4 @@
-package se.java.security.services;
+package security_package.services;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import se.java.security.models.User;
-import se.java.security.repository.UserRepository;
+import security_package.models.User;
+import security_package.repository.UserRepository;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
