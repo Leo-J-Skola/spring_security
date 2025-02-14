@@ -39,7 +39,17 @@ public class ProductController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    // PUT
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable String id, @RequestBody Product product) {
+        return ResponseEntity.ok(productService.updateProduct(id, product));
+    }
 
+    // PATCH
+    @PatchMapping("/{id}")
+    public ResponseEntity<Product> patchProduct(@PathVariable String id, @RequestBody Product product) {
+        return ResponseEntity.ok(productService.patchProduct(id, product));
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable String id) {

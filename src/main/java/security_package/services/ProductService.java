@@ -1,6 +1,7 @@
 package security_package.services;
 
 import jakarta.validation.Valid;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import security_package.exceptions.ResourceNotFoundException;
 import security_package.models.Product;
@@ -34,6 +35,36 @@ public class ProductService {
     public Optional<security_package.models.Product> getProductById(String id) {
         return productRepository.findById(id);
     }
+
+    //PUT
+    public Product updateProduct(String id, Product product) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found" + id));
+        existingProduct.setName(product.getName());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setDescription(product.getDescription());
+
+        return productRepository.save(existingProduct);
+    }
+
+    //PATCH
+    public Product patchProduct(String id, Product product) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found" + id));
+
+        if (product.getName() != null) {
+            existingProduct.setName(product.getName());
+        }
+        if (product.getPrice() != null) {
+            existingProduct.setPrice(product.getPrice());
+        }
+        if (product.getDescription() != null) {
+            existingProduct.setDescription(product.getDescription());
+        }
+
+        return productRepository.save(existingProduct);
+    }
+
 
     public void deleteProduct(String id) {
         Product product = productRepository.findById(id)

@@ -26,56 +26,62 @@ public class SecurityConfig {
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
-
-    //create AuthenticationManager
+    // add jwt filter before standard filter
+    // create AuthenticationManager which is the "boss" of the authentication process
     @Bean
     public AuthenticationManager authenticationManager(
             AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-//main config for security filter and rules
-@Bean
-public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-            //CORS config
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            //CSRF, disable in dev
-            .csrf(csrf -> csrf.disable())
-            //define URL based rules
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/admin/**").hasRole("ADMIN")
-                    .requestMatchers("/products/**").hasRole("ADMIN")
-                    .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-                    .anyRequest().permitAll()
-                    //any other requests, the user needs to be logged in
-                    .anyRequest().authenticated()
-            )
-    //disable session due to jwt statelessness
-            .sessionManagement(session -> session
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            //add jwt filter before authentication filter
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-    return http.build();
-}
-    //CORS config
+
+    // main config for security filter and rules
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                // CORS config
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // CSRF, disable in dev
+                // OBS! should not be disabled in production
+                .csrf(csrf -> csrf.disable())
+                // define URL based rules
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/products/**").hasRole("ADMIN")
+                        .requestMatchers("/orders/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/auth/**").permitAll()
+                        //.requestMatchers("/products/**").permitAll()
+                        // any other requests the user need to be logged
+                        .anyRequest().authenticated()
+                )
+                // disable session due to jwt statelessness
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                // add jwt filter before standard filter
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        return  http.build();
+    }
+
+    // cors config
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        //only allow requests our future react client
+        // only allow request from our future react client
         configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(List.of("Set-Cookie"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 }
-
